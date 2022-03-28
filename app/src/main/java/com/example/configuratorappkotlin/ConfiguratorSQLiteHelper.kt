@@ -4,6 +4,7 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 
+/* It create the structure of our database*/
 class ConfiguratorSQLiteHelper(context: Context?) :
     SQLiteOpenHelper(context, "flags", null, 1) {
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {

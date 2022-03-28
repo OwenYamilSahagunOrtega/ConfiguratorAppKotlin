@@ -25,21 +25,25 @@ class MainActivity : AppCompatActivity() {
             setContentView(R.layout.activity_main)
 
             val swController = findViewById<View>(R.id.SwitchControllerEnvironment) as Switch
+            //The content provider that we are going to use
             uri = Uri.parse("content://com.example.configuratorappkotlin/flagName")
 
+            //We insert a data in our database if is empty (the record that we are going to read)
             val c = contentResolver.query(uri!!, null, null, null)
             if (c!!.count == 0) {
                 values.put("flagSwitch", Cp.switchStatus1)
                 contentResolver.insert(uri!!, values)
             }
+
+            //Switch controller
             swController.setOnCheckedChangeListener { compoundButton, b ->
                 Cp.switchStatus1 = b
                 UpdateDatabase()
-                Log.e("Aqui", b.toString());
             }
 
         }
 
+        /*Update the values from the 1 record that we have */
         fun UpdateDatabase() {
             values.put("flagSwitch", Cp.switchStatus1)
             try {

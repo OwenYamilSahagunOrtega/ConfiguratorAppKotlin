@@ -16,11 +16,13 @@ import java.lang.IllegalArgumentException
 
 class ConfiguratorProvider : ContentProvider() {
     companion object {
+        /*Information that we are going to use to communicate that is also included in manifest*/
         const val AUTHORITY = "com.example.configuratorappkotlin"
         val CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/flagName")
         const val All_ELEMENTS = 1
         const val ONE_ELEMENT = 2
         private var URI_MATCHER: UriMatcher? = null
+        //Name of the table that we are going to use/create
         const val TABLE = "flags"
 
         init {
