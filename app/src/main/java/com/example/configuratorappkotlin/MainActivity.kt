@@ -14,42 +14,42 @@ import androidx.annotation.RequiresApi
 import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
-        var Cp: ContentPayload = ContentPayload()
-        var values = ContentValues()
-        var uri: Uri? = null
+    lateinit var contentPayload: ContentPayload
+    private lateinit var contentValues: ContentValues
+    lateinit var uri: Uri
 
-        @RequiresApi(api = Build.VERSION_CODES.O)
-        @SuppressLint("Range")
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_main)
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("Range", "UseSwitchCompatOrMaterialCode", "Recycle")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-            val swController = findViewById<View>(R.id.SwitchControllerEnvironment) as Switch
-            //The content provider that we are going to use
-            uri = Uri.parse("content://com.example.configuratorappkotlin/flagName")
+        contentPayload = ContentPayload()
+        contentValues = ContentValues()
+        uri = Uri.parse("content://com.example.configuratorappkotlin/flagName")
 
-            //We insert a data in our database if is empty (the record that we are going to read)
-            val c = contentResolver.query(uri!!, null, null, null)
-            if (c!!.count == 0) {
-                values.put("flagSwitch", Cp.switchStatus1)
-                contentResolver.insert(uri!!, values)
-            }
-
-            //Switch controller
-            swController.setOnCheckedChangeListener { compoundButton, b ->
-                Cp.switchStatus1 = b
-                UpdateDatabase()
-            }
-
+        val swController = findViewById<View>(R.id.SwitchControllerEnvironment) as Switch
+        //We insert a data in our database if is empty (the record that we are going to read)
+        val cursor = contentResolver.query(uri, null, null, null)
+        if (cursor!!.count == 0) {
+            contentValues.put("flagSwitch", contentPayload.switchStatus1)
+            contentResolver.insert(uri, contentValues)
         }
 
-        /*Update the values from the 1 record that we have */
-        fun UpdateDatabase() {
-            values.put("flagSwitch", Cp.switchStatus1)
-            try {
-                contentResolver.update(uri!!, values, null, null)
-            } catch (e: Exception) {
-                Log.e("Error: $e", e.toString())
-            }
+        //Switch controller
+        swController.setOnCheckedChangeListener { _, b ->
+            contentPayload.switchStatus1 = b
+            updateDatabase()
         }
     }
+
+    /*Update the values from the 1 record that we have */
+    private fun updateDatabase() {
+        try {
+            contentValues.put("flagSwitch", contentPayload.switchStatus1)
+            contentResolver.update(uri, contentValues, null, null)
+        } catch (e: Exception) {
+            Log.e("Error: $e", e.toString())
+        }
+    }
+}
