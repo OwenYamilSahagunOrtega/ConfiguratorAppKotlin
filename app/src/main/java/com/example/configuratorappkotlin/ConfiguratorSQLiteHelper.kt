@@ -9,9 +9,10 @@ class ConfiguratorSQLiteHelper(context: Context?) :
     SQLiteOpenHelper(context, "flags", null, 1) {
     override fun onCreate(sqLiteDatabase: SQLiteDatabase) {
         sqLiteDatabase.execSQL(
-            "CREATE TABLE flags ("
-                    + "_id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                    + "flagSwitch BOOLEAN)"
+            "CREATE TABLE flags (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "flagSwitch BOOLEAN" +
+                ")"
         )
     }
 

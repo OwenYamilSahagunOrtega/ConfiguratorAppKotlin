@@ -1,10 +1,8 @@
 package com.example.configuratorappkotlin
 
 import android.content.ContentProvider
-import com.example.configuratorappkotlin.ConfiguratorProvider
 import android.content.UriMatcher
 import android.database.sqlite.SQLiteDatabase
-import com.example.configuratorappkotlin.ConfiguratorSQLiteHelper
 import android.database.sqlite.SQLiteQueryBuilder
 import android.content.ContentValues
 import android.content.ContentUris
@@ -17,13 +15,13 @@ import java.lang.IllegalArgumentException
 class ConfiguratorProvider : ContentProvider() {
     companion object {
         /*Information that we are going to use to communicate that is also included in manifest*/
-        const val AUTHORITY = "com.example.configuratorappkotlin"
-        val CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/flagName")
-        const val All_ELEMENTS = 1
-        const val ONE_ELEMENT = 2
+        private const val AUTHORITY = "com.example.configuratorappkotlin"
+        private val CONTENT_URI = Uri.parse("content://com.example.configuratorappkotlin/flagName")
+        private const val All_ELEMENTS = 1
+        private const val ONE_ELEMENT = 2
         private var URI_MATCHER: UriMatcher? = null
         //Name of the table that we are going to use/create
-        const val TABLE = "flags"
+        private const val TABLE = "flags"
 
         init {
             URI_MATCHER = UriMatcher(UriMatcher.NO_MATCH)
@@ -39,7 +37,7 @@ class ConfiguratorProvider : ContentProvider() {
         return database != null && database!!.isOpen
     }
 
-    override fun getType(uri: Uri): String? {
+    override fun getType(uri: Uri): String {
         return when (URI_MATCHER!!.match(uri)) {
             All_ELEMENTS -> "vnd.android.cursor.dir/com.example.configuratorappkotlin"
             ONE_ELEMENT -> "vnd.android.cursor.item/com.example.configuratorappkotlin"
@@ -65,10 +63,10 @@ class ConfiguratorProvider : ContentProvider() {
         return queryBuilder.query(database, proyection, selection, argSelection, null, null, null)
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? {
-        val IdFila = database!!.insert(TABLE, null, values)
-        return if (IdFila > 0) {
-            ContentUris.withAppendedId(CONTENT_URI, IdFila)
+    override fun insert(uri: Uri, values: ContentValues?): Uri {
+        val idRow = database!!.insert(TABLE, null, values)
+        return if (idRow > 0) {
+            ContentUris.withAppendedId(CONTENT_URI, idRow)
         } else {
             throw SQLException("Error adding $uri")
         }
@@ -81,10 +79,10 @@ class ConfiguratorProvider : ContentProvider() {
     override fun update(
         uri: Uri,
         values: ContentValues?,
-        selection: String?,
+        select: String?,
         ArgumentsSelection: Array<String>?
     ): Int {
-        var selection = selection
+        var selection = select
         when (URI_MATCHER!!.match(uri)) {
             All_ELEMENTS -> {
             }
